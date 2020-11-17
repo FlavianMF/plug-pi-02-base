@@ -17,12 +17,21 @@ void setup() {
 }
 
 uint16_t rawPotentiometerValue = 0;
-uint16_t rawTemperatureValue = 0;
 
 void loop() {
-  rawTemperatureValue = lm35.read();
-  rawPotentiometerValue = potentiometer.read();
+  rawPotentiometerValue = analogRead();
 
-  analogWrite(redLedPin, map(rawTemperatureValue, 0, 1024, 0, 255));
-  analogWrite(greenLedPin, map(rawPotentiometerValue, 0, 1024, 0, 255));
+  if (rawPotentiometerValue <= 333) {
+    analogWrite(greenLedPin, map(rawPotentiometerValue, 0, 333, 0, 255));
+    analogWrite(redLedPin, 0);
+    analogWrite(yellowLedPin, 0);
+  } else if (rawPotentiometerValue >= 666) {
+    analogWrite(redLedPin, map(rawPotentiometerValue, 666, 1000, 0, 255));
+    analogWrite(yellowLedPin, 255);
+    analogWrite(greenLedPin, 255);
+  } else {
+    analogWrite(yellowLedPin, map(rawPotentiometerValue, 333, 666, 0, 255));
+    analogWrite(redLedPin, 0);
+    analogWrite(yellowLedPin, 255);
+  }
 }
